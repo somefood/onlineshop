@@ -31,9 +31,12 @@ def remove(request, product_id):
 
 def detail(request):
     cart = Cart(request)
+    # print(cart.session.__dict__)
     for product in cart:
+        print(product)
         product['quantity_form'] = AddProductForm(initial={
             'quantity': product['quantity'], 'is_update': True
         })
+    print(cart.__dict__)
 
     return render(request, 'cart/detail.html', {'cart': cart})
