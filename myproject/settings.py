@@ -55,7 +55,16 @@ INSTALLED_APPS = [
 ]
 
 INSTALLED_APPS += [
-    'shop'
+    'django.contrib.sites', # 사이트 정보 관리
+    'allauth',
+    'allauth.account', # 가입한 계정 관리
+    'allauth.socialaccount', # 소셜 계정으로 가입한 계정 관리
+    'allauth.socialaccount.providers.naver', # 어떤 소셜 서비스를 사용하는지 추가
+]
+
+INSTALLED_APPS += [
+    'shop',
+    'cart',
 ]
 
 MIDDLEWARE = [
@@ -137,3 +146,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SITE_ID = 1 # contirb.sites의 1번 instance 정보 사용
+LOGIN_REDIRECT_URL = '/'
+
+CART_ID = 'cart_item'

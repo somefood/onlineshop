@@ -19,7 +19,9 @@
             {% for product in products %}
             <div class="col-4">
                 <div class="card">
+                    {% if product.image %}
                     <img src="{{product.image.url}}" alt="Product Image" class="cart-img-top">
+                    {% endif %}
                     <div class="card-body">
                         <h5 class="card-title">{{ product.name }}</h5>
                         <p class="card-text">{{product.description}} <span class="badge badge-secondary">{{product.price}}</span></p>
