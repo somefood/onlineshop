@@ -65,6 +65,7 @@ INSTALLED_APPS += [
 INSTALLED_APPS += [
     'shop',
     'cart',
+    'coupon',
 ]
 
 MIDDLEWARE = [
