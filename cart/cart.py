@@ -4,6 +4,7 @@ from shop.models import Product
 
 from coupon.models import Coupon
 
+
 class Cart:
     def __init__(self, request):
         self.session = request.session

@@ -5,6 +5,7 @@ from django.views.decorators.http import require_POST
 from shop.models import Product
 from .forms import AddProductForm
 from .cart import Cart
+from coupon.forms import AddCouponForm
 
 
 @require_POST # 어노테이션(데코레이터)
@@ -31,6 +32,7 @@ def remove(request, product_id):
 
 def detail(request):
     cart = Cart(request)
+    add_coupon = AddCouponForm()
     # print(cart.session.__dict__)
     for product in cart:
         print(product)
@@ -39,4 +41,7 @@ def detail(request):
         })
     print(cart.__dict__)
 
-    return render(request, 'cart/detail.html', {'cart': cart})
+    return render(request, 'cart/detail.html', {
+        'cart': cart,
+        'add_coupon': add_coupon,
+    })
