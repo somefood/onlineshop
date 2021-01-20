@@ -1,11 +1,10 @@
 import hashlib
-
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from coupon.models import Coupon
 from shop.models import Product
 from .iamport import payments_prepare, find_transaction
-
+from django.db.models.signals import post_save
 
 class Order(models.Model):
     first_name = models.CharField(max_length=50)
@@ -98,3 +97,19 @@ class OrderTransaction(models.Model):
 
     class Meta:
         ordering = ['-created']
+
+
+def order_payment_validation(sender, instance, created, *args, **kwargs):
+    if instance.transaction_id:
+        import_transaction = OrderTransaction.objects.get_transaction(merchant_order_id=instance.merchant_order_id)
+        merchant_order_id = import_transaction['merchant_order_id']
+        imp_id = import_transaction['imp_id']
+        amount = import_transaction['amount']
+
+        local_transaction = OrderTransaction.objects.filter(merchant_order_id=merchant_order_id, transaction_id=imp_id,
+                                                            amount=amount).exists()
+        if not import_transaction or not local_transaction:
+            raise ValueError("비정상 거래입니다.")
+
+
+post_save.connect(order_payment_validation, sender=OrderTransaction) # OrderTransaction 모델 저장 후 함수 실
