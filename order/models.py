@@ -6,6 +6,7 @@ from shop.models import Product
 from .iamport import payments_prepare, find_transaction
 from django.db.models.signals import post_save
 
+
 class Order(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -47,7 +48,7 @@ class OrderItem(models.Model):
 
 
 class OrderTransactionManager(models.Manager):
-    def created_new(self, order, amount, success=None, transaction_status=None):
+    def create_new(self, order, amount, success=None, transaction_status=None):
         if not order:
             raise ValueError("주문 정보 오류")
 
@@ -63,7 +64,7 @@ class OrderTransactionManager(models.Manager):
         )
 
         if success is not None:
-            transaction.success= success
+            transaction.success = success
             transaction.transaction_status = transaction_status
 
         try:

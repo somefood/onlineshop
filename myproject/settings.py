@@ -148,6 +148,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -158,3 +161,6 @@ SITE_ID = 1 # contirb.sites의 1번 instance 정보 사용
 LOGIN_REDIRECT_URL = '/'
 
 CART_ID = 'cart_item'
+
+IAMPORT_KEY = get_secret('IAMPORT_KEY')
+IAMPORT_SECRET = get_secret('IAMPORT_SECRET')

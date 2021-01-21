@@ -3,22 +3,27 @@ from django.conf import settings
 
 
 def get_token():
+    print('get_token 실행1')
     access_data = {
         'imp_key': settings.IAMPORT_KEY,
         'imp_secret': settings.IAMPORT_SECRET
     }
     url = "https://api.iamport.kr/users/getToken"
     req = requests.post(url, data=access_data) # json 형태로 받을 예정
+    print('get_token 실행2',req.status_code)
     access_res = req.json()
+    print('get_token', access_res)
 
-    if access_res['code'] is 0:
+    if access_res['code'] == 0:
         return access_res['response']['access_token']
     else:
         return None
 
 
 def payments_prepare(order_id, amount, *args, **kwargs):
+    print('payments 실행1')
     access_token = get_token()
+    print('payments 실행2', access_token)
     if access_token:
         access_data = {
             'merchant_uid': order_id,
@@ -58,4 +63,4 @@ def find_transaction(order_id, *args, **kwargs):
         else:
             return None
     else:
-        raise  ValueError("토큰 오류")
+        raise ValueError("토큰 오류")

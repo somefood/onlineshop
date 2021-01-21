@@ -19,7 +19,7 @@ def order_create(request):
                 order.discount = cart.get_discount_total()
                 order.save()
             for item in cart:
-                OrderItem.objects.create(order=order, product=item['product'], price=item['price'], qunatity=item['quantity'])
+                OrderItem.objects.create(order=order, product=item['product'], price=item['price'], quantity=item['quantity'])
             cart.clear()
             return render(request, 'order/created.html', {'order': order})
         else:
@@ -51,7 +51,7 @@ class OrderCreateAjaxView(View):
                 order.discount = cart.get_discount_total()
             order.save()
             for item in cart:
-                OrderItem.objects.create(order=order, product=item['product'], price=item['price'], qunatity=item['quantity'])
+                OrderItem.objects.create(order=order, product=item['product'], price=item['price'], quantity=item['quantity'])
             cart.clear()
             data = {
                 "order_id": order.id
@@ -62,6 +62,7 @@ class OrderCreateAjaxView(View):
 
 
 # 트랜잭션 생성
+# 결제 정보 생성
 class OrderCheckoutAjaxView(View):
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -69,16 +70,16 @@ class OrderCheckoutAjaxView(View):
 
         order_id = request.POST.get('order_id')
         order = Order.objects.get(id=order_id)
-        amount = request.POST.get('amout')
+        amount = request.POST.get('amount')
 
         try:
-            merchant_order_id = OrderTransaction.objects.created_new(
+            merchant_order_id = OrderTransaction.objects.create_new(
                 order=order,
-                amout=amount
+                amount=amount
             )
         except:
             merchant_order_id = None
-
+        print(merchant_order_id)
         if merchant_order_id is not None:
             data = {
                 "works": True,
@@ -86,7 +87,7 @@ class OrderCheckoutAjaxView(View):
             }
             return JsonResponse(data)
         else:
-            return JsonResponse({}, status=401)
+            return JsonResponse({'test':'test'}, status=401)
 
 
 class OrderImpAjaxView(View):
